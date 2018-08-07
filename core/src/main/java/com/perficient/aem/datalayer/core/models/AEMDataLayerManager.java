@@ -40,6 +40,10 @@ public class AEMDataLayerManager {
 	}
 
 	public AEMDataLayerConfig getConfig() {
+		if (dataLayer == null) {
+			return null;
+		}
+
 		return dataLayer.getConfig();
 	}
 }
