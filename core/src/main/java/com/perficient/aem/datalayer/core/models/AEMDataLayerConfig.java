@@ -75,6 +75,7 @@ public class AEMDataLayerConfig {
 	private String environment;
 
 	@Inject
+	@Default(values = "digitalData")
 	private String objectName;
 
 	@Inject
