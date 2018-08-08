@@ -43,10 +43,10 @@
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-scr-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.sonatype.plugins</groupId>-->
+				<!--<artifactId>nexus-staging-maven-plugin</artifactId>-->
+			<!--</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -169,7 +169,7 @@
 		<dependency>
 			<groupId>com.perficient.aem</groupId>
 			<artifactId>aem-datalayer.core</artifactId>
-			<version>0.2.3-SNAPSHOT</version>
+			<version>0.2.3-adobe-prh-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
