@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>com.perficient.aem</groupId>
 		<artifactId>aem-datalayer</artifactId>
-		<version>0.2.3-SNAPSHOT</version>
+		<version>0.2.4-adobe-prh</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>weretail-reference</artifactId>
@@ -169,7 +169,6 @@
 		<dependency>
 			<groupId>com.perficient.aem</groupId>
 			<artifactId>aem-datalayer.core</artifactId>
-			<version>0.2.3-adobe-prh-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
