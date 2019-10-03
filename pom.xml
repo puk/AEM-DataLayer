@@ -43,20 +43,20 @@
         </license>
     </licenses>
 
-    <distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>prh-nexus-releases</id>
-            <name>PRH Releases</name>
-            <url>http://52.18.142.213/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>prh-nexus-snapshots</id>
-            <name>PRH Snapshots</name>
-            <url>http://52.18.142.213/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>prh-nexus-releases</id>
+			<name>PRH Releases</name>
+			<url>http://52.18.142.213/nexus/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>prh-nexus-snapshots</id>
+			<name>PRH Snapshots</name>
+			<url>http://52.18.142.213/nexus/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
     <scm>
         <url>https://github.com/PerficientDigital/AEM-DataLayer</url>
