@@ -97,6 +97,10 @@ public class AEMDataLayerInterceptorFilter implements Filter {
 		Object appliable = request.getAttribute(REQUEST_PROPERTY_AEM_DATALAYER_APPLICABLE);
 		if (appliable == null) {
 			Resource resource = request.getResource();
+			if (ResourceUtil.isNonExistingResource(resource)) {
+				log.warn("Resource is nonExisting. {}", resource);
+				return false;
+			}
 			PageManager pMgr = resource.getResourceResolver().adaptTo(PageManager.class);
 			Page page = pMgr.getContainingPage(resource);
 			AEMDataLayerConfig config = AEMDataLayerConfig.getDataLayerConfig(page);
