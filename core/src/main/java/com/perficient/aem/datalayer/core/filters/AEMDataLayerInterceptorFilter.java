@@ -16,8 +16,6 @@
 package com.perficient.aem.datalayer.core.filters;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
@@ -34,7 +33,6 @@ import org.apache.felix.scr.annotations.sling.SlingFilterScope;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.models.factory.ModelClassException;
 import org.apache.sling.models.factory.ModelFactory;
 import org.osgi.framework.Constants;
@@ -99,10 +97,6 @@ public class AEMDataLayerInterceptorFilter implements Filter {
 		Object appliable = request.getAttribute(REQUEST_PROPERTY_AEM_DATALAYER_APPLICABLE);
 		if (appliable == null) {
 			Resource resource = request.getResource();
-			if (ResourceUtil.isNonExistingResource(resource)) {
-				log.warn("Resource is nonExisting. {}", resource);
-				return false;
-			}
 			PageManager pMgr = resource.getResourceResolver().adaptTo(PageManager.class);
 			Page page = pMgr.getContainingPage(resource);
 			AEMDataLayerConfig config = AEMDataLayerConfig.getDataLayerConfig(page);
@@ -121,60 +115,57 @@ public class AEMDataLayerInterceptorFilter implements Filter {
 	}
 
 	private void updateDataLayer(SlingHttpServletRequest request, DataLayer dataLayerModel) {
+
 		log.trace("Updating DataLayer with {}", request.getResource().getPath());
-		ComponentDataElement model = null;
+		Object model = null;
 		Resource resource = request.getResource();
 
-		if (resourceHierarchyHasACycle(resource)) {
-			log.debug("Invalid resource {} with recursive resource type, not evaluating", resource);
-			return;
+		// Check to make sure we're not about to run into a stack overflow
+		if (resource.getResourceType() != null) {
+			ResourceResolver resolver = request.getResourceResolver();
+			String parentResourceType = resolver.getParentResourceType(resource.getResourceType());
+			Resource parentResource = resolver.getResource(resource.getResourceType());
+			if (parentResource != null && parentResourceType != null) {
+				String grandparentResourceType = resolver.getParentResourceType(parentResource.getResourceType());
+				if (ObjectUtils.equals(parentResourceType, grandparentResourceType)) {
+					log.debug("Invalid resource {} with recursive resource type, not evaluating", resource);
+					return;
+				}
+			}
 		}
 
 		try {
-			if (modelFactory.canCreateFromAdaptable(request, ComponentDataElement.class)) {
-				model = modelFactory.createModel(request, ComponentDataElement.class);
+			model = modelFactory.getModelFromRequest(request);
+			if (!(model instanceof ComponentDataElement)) {
+				model = null;
 			}
 		} catch (ModelClassException mce) {
-			log.debug("Failed to adapt request {} to ComponentDataElement", request, mce);
+			log.debug("Failed to adapt request " + request + " to ComponentDataElement: ", mce);
 		} catch (Exception e) {
-			log.debug("Unexpected exception adapting request {} to ComponentDataElement", request, e);
+			log.debug("Unexpected exception adapting request " + request + " to ComponentDataElement: ", e);
 		}
 
 		if (model == null) {
 			try {
-				model = modelFactory.createModel(resource, ComponentDataElement.class);
+				model = modelFactory.getModelFromResource(resource);
 			} catch (ModelClassException mce) {
-				log.debug("Failed to adapt resource {} to ComponentDataElement", resource, mce);
+				log.debug("Failed to adapt resource " + resource + " to ComponentDataElement: ", mce);
 			} catch (Exception e) {
-				log.debug("Unexpected exception adapting resource {} to ComponentDataElement", resource, e);
+				log.debug("Unexpected exception adapting resource " + resource + " to ComponentDataElement: ", e);
 			}
 		}
 
 		if (model != null) {
-			log.debug("Found ComponentDataElement {} for {}", model.getClass().getName(), resource);
-			model.updateDataLayer(dataLayerModel);
+			if (model instanceof ComponentDataElement) {
+				ComponentDataElement cde = (ComponentDataElement) model;
+				log.debug("Found ComponentDataElement {} for {}", cde.getClass().getName(), resource);
+				cde.updateDataLayer(dataLayerModel);
+			} else {
+				log.debug("Found model of unexpected class {}", model.getClass().getName());
+			}
 		} else {
 			log.trace("No ComponentDataElement found for {}", resource);
 		}
-	}
-
-	boolean resourceHierarchyHasACycle(Resource resource) {
-		String resourceType = resource.getResourceType();
-		Set<String> resourceTypeSet = new HashSet<>();
-
-		ResourceResolver resolver = resource.getResourceResolver();
-
-		while (resourceType != null) {
-			if (resourceTypeSet.contains(resourceType)) {
-				log.trace("Found a cycle in the resource type hierarchy for {}", resourceType);
-				return true;
-			}
-
-			resourceTypeSet.add(resourceType);
-			resourceType = resolver.getParentResourceType(resource.getResourceType());
-		}
-
-		return false;
 	}
 
 }
