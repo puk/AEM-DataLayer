@@ -169,7 +169,6 @@
 		<dependency>
 			<groupId>com.perficient.aem</groupId>
 			<artifactId>aem-datalayer.core</artifactId>
-			<version>0.3.0-adobe-prh</version>
 		</dependency>
 	</dependencies>
 </project>
