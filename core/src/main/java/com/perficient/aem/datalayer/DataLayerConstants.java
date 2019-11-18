@@ -20,7 +20,7 @@ package com.perficient.aem.datalayer;
  * 
  * @author danklco
  */
-public interface DataLayerConstants {
+public class DataLayerConstants {
 
 	public static final String DATA_KEY_PRICE = "price";
 	public static final String DATA_KEY_ITEM = "item";
@@ -32,4 +32,11 @@ public interface DataLayerConstants {
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssX'00'";
 	public static final String REQUEST_PROPERTY_AEM_DATALAYER = "AEM_DATALAYER";
 	public static final String SERVICE_VENDOR = "Perficient";
+	@SuppressWarnings("squid:S1075")
+	public static final String AEM_DATALAYER_CONFIG_PATH = "/etc/cloudservices/aemdatalayer";
+	public static final String PN_CLOUD_SERVICE_CONFIGS = "cq:cloudserviceconfigs";
+
+	private DataLayerConstants() {
+		// hidden
+	}
 }
