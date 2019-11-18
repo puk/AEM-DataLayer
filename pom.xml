@@ -13,7 +13,7 @@
 	<groupId>com.perficient.aem</groupId>
 	<artifactId>aem-datalayer</artifactId>
 	<packaging>pom</packaging>
-	<version>0.2.4-adobe-prh</version>
+	<version>0.3.0-adobe-prh</version>
 	<name>AEM DataLayer</name>
 	<description>Sling Models based DataLayer library for Adobe Experience Manager</description>
 	<url>https://github.com/PerficientDigital/AEM-DataLayer</url>
@@ -635,12 +635,12 @@
 			<dependency>
 				<groupId>com.perficient.aem</groupId>
 				<artifactId>weretail-reference</artifactId>
-				<version>0.2.4-adobe-prh</version>
+				<version>0.3.0-adobe-prh</version>
 			</dependency>
 			<dependency>
 				<groupId>com.perficient.aem</groupId>
 				<artifactId>aem-datalayer.core</artifactId>
-				<version>0.2.4-adobe-prh</version>
+				<version>0.3.0-adobe-prh</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
